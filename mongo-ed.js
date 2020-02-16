@@ -9,7 +9,7 @@ app.use(BodyParser.json());
 app.use(BodyParser.urlencoded({ extended: true }));
 
 var userPassword = 'klousman';
-var collection;
+var dbo;
 
 var CONNECTION_URL =
   'mongodb+srv://edjeong99:' + userPassword + '@cluster0-uamnw.mongodb.net/db1';
@@ -23,15 +23,19 @@ app.listen(3000, () => {
     }
     console.log('DB create success');
     // Interestingly, 'MongoClient.connect' does not connect to database.  Below '.db()' does.
-    var connObj = clientConn.db('db1');
+    dbo = clientConn.db('db1');
 
     console.log('DB connection success');
-    collection = connObj.collection('user');
   });
 });
 
 app.get('/info', (request, response) => {
-  var infoJson = collection.find();
-  // console.log(infoJson);
-  response.send(infoJson);
+  var infoJson = dbo
+    .collection('user')
+    .find()
+    .toArray(function(err, result) {
+      if (err) throw err;
+      response.send(result);
+      console.log(result);
+    });
 });
