@@ -29,7 +29,7 @@ app.listen(3000, () => {
   });
 });
 
-app.get('/info', (request, response) => {
+app.get('/user', (request, response) => {
   var infoJson = dbo
     .collection('user')
     .find()
@@ -37,5 +37,29 @@ app.get('/info', (request, response) => {
       if (err) throw err;
       response.send(result);
       console.log(result);
+    });
+});
+
+// return document with name as parameter in URL
+app.get('/user/:name', (request, response) => {
+  console.log('get user with parameter' + request.params.name);
+  var infoJson = dbo
+    .collection('user')
+    .find({ name: request.params.name })
+    .toArray(function(err, result) {
+      if (err) throw err;
+      response.send(result);
+      console.log(result);
+    });
+});
+
+app.post('/user', (request, response) => {
+  console.log(request.body);
+  var infoJson = dbo
+    .collection('user')
+    .insertOne(request.body, function(err, result) {
+      if (err) throw err;
+      response.send(200);
+      console.log('add success');
     });
 });
