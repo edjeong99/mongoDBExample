@@ -53,6 +53,7 @@ app.get('/user/:name', (request, response) => {
     });
 });
 
+// add a document to the collection
 app.post('/user', (request, response) => {
   console.log(request.body);
   var infoJson = dbo
@@ -61,5 +62,29 @@ app.post('/user', (request, response) => {
       if (err) throw err;
       response.send(200);
       console.log('add success');
+    });
+});
+
+// edit  a document in the collection
+app.put('/user', (request, response) => {
+  console.log(request.body);
+  var infoJson = dbo
+    .collection('user')
+    .update(request.body.user, request.body.update, function(err, result) {
+      if (err) throw err;
+      response.send(200);
+      console.log('update success');
+    });
+});
+
+// delete  a document in the collection
+app.delete('/user', (request, response) => {
+  console.log(request.body);
+  var infoJson = dbo
+    .collection('user')
+    .deleteOne(request.body, function(err, result) {
+      if (err) throw err;
+      response.send(200);
+      console.log('delete success');
     });
 });
