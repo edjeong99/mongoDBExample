@@ -40,7 +40,7 @@ app.get('/user', (request, response) => {
     });
 });
 
-// return document with name as parameter in URL
+// return document with name that mach the parameter in URL
 app.get('/user/:name', (request, response) => {
   console.log('get user with parameter' + request.params.name);
   var infoJson = dbo
@@ -53,7 +53,7 @@ app.get('/user/:name', (request, response) => {
     });
 });
 
-// add a document to the collection
+// add a document in body to the collection
 app.post('/user', (request, response) => {
   console.log(request.body);
   var infoJson = dbo
@@ -66,11 +66,15 @@ app.post('/user', (request, response) => {
 });
 
 // edit  a document in the collection
-app.put('/user', (request, response) => {
+app.put('/user/:name', (request, response) => {
   console.log(request.body);
+  console.log(request.params.name);
   var infoJson = dbo
     .collection('user')
-    .update(request.body.user, request.body.update, function(err, result) {
+    .updateOne({ name: request.params.name }, { $set: request.body }, function(
+      err,
+      result
+    ) {
       if (err) throw err;
       response.send(200);
       console.log('update success');
@@ -78,11 +82,11 @@ app.put('/user', (request, response) => {
 });
 
 // delete  a document in the collection
-app.delete('/user', (request, response) => {
+app.delete('/user/:name', (request, response) => {
   console.log(request.body);
   var infoJson = dbo
     .collection('user')
-    .deleteOne(request.body, function(err, result) {
+    .deleteOne({ name: request.params.name }, function(err, result) {
       if (err) throw err;
       response.send(200);
       console.log('delete success');
